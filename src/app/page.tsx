@@ -6,9 +6,9 @@ import type { UIMessage } from 'ai';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ToolPart } from '@/components/ToolPart';
-import { OrderSummaryCard } from '@/components/CheckoutCards';
+import { DetailsFormCard, OrderSummaryCard } from '@/components/CheckoutCards';
 import { deriveCart, cartTotal, cartCount, type CartItem } from '@/lib/cart';
-import type { OrderSummaryInput } from '@/lib/checkout';
+import type { CollectDetailsInput, OrderSummaryInput } from '@/lib/checkout';
 import { formatPrice } from '@/lib/products';
 
 const STORAGE_KEY = 'kapuru-chat-v1';
@@ -21,8 +21,14 @@ function quickRepliesFor(messages: UIMessage[], cartItems: number): Chip[] {
   const last = messages[messages.length - 1];
   if (!last || last.role !== 'assistant') return [];
 
-  // An order summary awaiting confirmation is the CTA — no competing chips.
-  if (last.parts.some((p) => (p as { type?: string }).type === 'tool-show_order_summary')) {
+  // An order summary or details form awaiting the customer is the CTA —
+  // no competing chips.
+  if (
+    last.parts.some((p) => {
+      const t = (p as { type?: string }).type;
+      return t === 'tool-show_order_summary' || t === 'tool-collect_details';
+    })
+  ) {
     return [];
   }
 
@@ -344,6 +350,27 @@ export default function Home() {
                                 active={mi === messages.length - 1 && !busy}
                                 onConfirm={() => send('Yes, place my order! ✅')}
                                 onEdit={() => send('I want to change something first ✏️')}
+                              />
+                            );
+                          }
+                          return null;
+                        }
+                        if (p.type === 'tool-collect_details') {
+                          const part = p as unknown as {
+                            state?: string;
+                            input?: CollectDetailsInput;
+                          };
+                          if (
+                            (part.state === 'input-available' ||
+                              part.state === 'output-available') &&
+                            part.input?.fields?.length
+                          ) {
+                            return (
+                              <DetailsFormCard
+                                key={i}
+                                form={part.input}
+                                active={mi === messages.length - 1 && !busy}
+                                onSubmit={send}
                               />
                             );
                           }

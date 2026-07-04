@@ -1,7 +1,108 @@
 'use client';
 
-import { parseDeliveryText, parseOrderOutput, type OrderSummaryInput } from '@/lib/checkout';
+import { useState } from 'react';
+import {
+  parseDeliveryText,
+  parseOrderOutput,
+  type CollectDetailsInput,
+  type DetailsField,
+  type OrderSummaryInput,
+} from '@/lib/checkout';
 import { formatPrice } from '@/lib/products';
+
+const FIELD_META: Record<DetailsField, { label: string; placeholder: string; msgLabel: string }> = {
+  recipient_name: { label: "Recipient's name 🎁", placeholder: 'e.g. Nadeesha Perera', msgLabel: 'Recipient' },
+  recipient_phone: { label: 'Their phone 📞', placeholder: 'e.g. 0771234567', msgLabel: 'Phone' },
+  recipient_address: { label: 'Delivery address 🏠', placeholder: 'street & house number', msgLabel: 'Address' },
+  city: { label: 'City 📍', placeholder: 'e.g. Colombo 03, Kandy', msgLabel: 'City' },
+  delivery_date: { label: 'Delivery date 📅', placeholder: '', msgLabel: 'Delivery date' },
+  sender_name: { label: 'Your name ✍️', placeholder: "so they know who it's from!", msgLabel: 'From' },
+  gift_message: { label: 'Gift message 💌 (optional)', placeholder: 'a few words from the heart…', msgLabel: 'Gift message' },
+};
+
+/** Inline checkout form — one friendly card instead of a wall of questions. */
+export function DetailsFormCard({
+  form,
+  active,
+  onSubmit,
+}: {
+  form: CollectDetailsInput;
+  /** Editable only while it's the newest message; older ones stay as a record. */
+  active: boolean;
+  onSubmit: (text: string) => void;
+}) {
+  const fields = form.fields.filter((f) => FIELD_META[f]);
+  const [values, setValues] = useState<Partial<Record<DetailsField, string>>>(
+    () => ({ ...form.prefill }),
+  );
+
+  const ready = fields
+    .filter((f) => f !== 'gift_message')
+    .every((f) => (values[f] ?? '').trim().length > 0);
+
+  function submit() {
+    const lines = fields
+      .map((f) => {
+        const v = (values[f] ?? '').trim();
+        return v ? `${FIELD_META[f].msgLabel}: ${v}` : null;
+      })
+      .filter(Boolean);
+    onSubmit(`Here are the details 📝\n${lines.join('\n')}`);
+  }
+
+  return (
+    <div className="animate-kapuru-pop my-2 w-full max-w-md overflow-hidden rounded-[20px] bg-white sticker">
+      <div className="flex items-center gap-2 border-b-[2.5px] border-ink bg-grape/30 px-4 py-2.5">
+        <span className="text-lg">📮</span>
+        <span className="text-sm font-extrabold text-ink">Just fill this in</span>
+      </div>
+      <div className="space-y-3 px-4 py-3">
+        {form.note && (
+          <p className="rounded-[12px] bg-sunny/40 px-3 py-2 text-xs font-bold text-ink sticker-sm">
+            💡 {form.note}
+          </p>
+        )}
+        {fields.map((f) => (
+          <label key={f} className="block">
+            <span className="mb-1 block text-xs font-extrabold text-ink/70">
+              {FIELD_META[f].label}
+            </span>
+            {f === 'gift_message' ? (
+              <textarea
+                value={values[f] ?? ''}
+                onChange={(e) => setValues((v) => ({ ...v, [f]: e.target.value }))}
+                disabled={!active}
+                rows={2}
+                placeholder={FIELD_META[f].placeholder}
+                className="w-full resize-none rounded-[14px] border-2 border-ink/80 bg-paper px-3 py-2 text-sm font-semibold text-ink outline-none placeholder:text-ink/35 focus:border-green disabled:opacity-60"
+              />
+            ) : (
+              <input
+                type={f === 'delivery_date' ? 'date' : f === 'recipient_phone' ? 'tel' : 'text'}
+                value={values[f] ?? ''}
+                onChange={(e) => setValues((v) => ({ ...v, [f]: e.target.value }))}
+                disabled={!active}
+                placeholder={FIELD_META[f].placeholder}
+                className="w-full rounded-[14px] border-2 border-ink/80 bg-paper px-3 py-2 text-sm font-semibold text-ink outline-none placeholder:text-ink/35 focus:border-green disabled:opacity-60"
+              />
+            )}
+          </label>
+        ))}
+      </div>
+      {active && (
+        <div className="px-4 pb-4">
+          <button
+            onClick={submit}
+            disabled={!ready}
+            className="sticker-sm sticker-lift w-full rounded-full bg-green-deep py-2.5 text-sm font-extrabold text-white disabled:opacity-40"
+          >
+            Done ✅
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function OrderSummaryCard({
   summary,

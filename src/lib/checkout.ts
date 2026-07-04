@@ -10,6 +10,22 @@ export type OrderSummaryInput = {
   gift_message?: string;
 };
 
+/** Input of the agent's collect_details tool — drives DetailsFormCard. */
+export type DetailsField =
+  | 'recipient_name'
+  | 'recipient_phone'
+  | 'recipient_address'
+  | 'city'
+  | 'delivery_date'
+  | 'sender_name'
+  | 'gift_message';
+
+export type CollectDetailsInput = {
+  fields: DetailsField[];
+  prefill?: Partial<Record<DetailsField, string>>;
+  note?: string;
+};
+
 export type DeliveryInfo = {
   city?: string;
   date?: string;

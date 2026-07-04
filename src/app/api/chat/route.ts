@@ -70,6 +70,47 @@ const showOrderSummary = tool({
   execute: async () => ({ ok: true, shown: true }),
 });
 
+// Local tool: renders a friendly inline form so the customer can fill several
+// checkout details at once instead of answering a wall of questions.
+// No side effects — display only; the form composes a chat message on submit.
+const collectDetails = tool({
+  description:
+    'Show the customer a small friendly form in the chat to collect checkout details (recipient, address, city, delivery date, sender, gift message). ALWAYS use this instead of asking 3+ questions in text. Only include fields you still need; prefill anything you already know. Keep your own text to ONE short warm line.',
+  inputSchema: z.object({
+    fields: z
+      .array(
+        z.enum([
+          'recipient_name',
+          'recipient_phone',
+          'recipient_address',
+          'city',
+          'delivery_date',
+          'sender_name',
+          'gift_message',
+        ]),
+      )
+      .min(1)
+      .describe('Which fields to show, in order'),
+    prefill: z
+      .object({
+        recipient_name: z.string().optional(),
+        recipient_phone: z.string().optional(),
+        recipient_address: z.string().optional(),
+        city: z.string().optional(),
+        delivery_date: z.string().optional().describe('YYYY-MM-DD'),
+        sender_name: z.string().optional(),
+        gift_message: z.string().optional(),
+      })
+      .optional()
+      .describe('Values you already know — shown pre-filled so the customer can just confirm'),
+    note: z
+      .string()
+      .optional()
+      .describe('Optional one-line helper shown above the form, e.g. a suggested gift message'),
+  }),
+  execute: async () => ({ ok: true, shown: true }),
+});
+
 // Allow agentic multi-step tool loops to take their time.
 export const maxDuration = 60;
 
@@ -82,7 +123,12 @@ export async function POST(req: Request) {
     model,
     system: SYSTEM_PROMPT,
     messages: await convertToModelMessages(messages),
-    tools: { ...tools, update_cart: updateCart, show_order_summary: showOrderSummary },
+    tools: {
+      ...tools,
+      update_cart: updateCart,
+      show_order_summary: showOrderSummary,
+      collect_details: collectDetails,
+    },
     // Let the model search -> read -> answer in one turn (multiple tool steps).
     stopWhen: stepCountIs(10),
     onFinish: async () => {
