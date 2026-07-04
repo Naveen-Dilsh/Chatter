@@ -202,52 +202,77 @@ export default function Home() {
       {/* Chat header — shows only while chatting */}
       {/* Always rendered (invisible on welcome) so the layout doesn't jump on first send */}
       <header className={`relative z-20 px-4 pt-4 ${messages.length === 0 ? 'invisible' : ''}`}>
-          <div className="glass mx-auto max-w-4xl rounded-[20px] px-4 py-2.5">
-            <div className="flex items-center gap-3">
+          <div className="sticker relative mx-auto max-w-4xl rounded-[20px] bg-white/85 px-3 py-2.5 backdrop-blur-md sm:px-4">
+            <span
+              aria-hidden
+              className="absolute -left-2.5 -top-3 -rotate-12 text-2xl drop-shadow-sm"
+            >
+              🌺
+            </span>
+            <span
+              aria-hidden
+              className="animate-kapuru-twinkle absolute -right-1.5 -top-2 text-lg"
+            >
+              ✨
+            </span>
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/header-avatar.svg" alt="Kapruu" className="h-11 w-11 shrink-0" />
-              <div className="leading-tight">
-                <h1 className="font-display text-base font-bold text-ink">Kapruu</h1>
-                <p className="flex items-center gap-1.5 text-[11px] font-extrabold text-green-deep">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green" /> online
+              <img
+                src="/header-avatar.svg"
+                alt="Kapruu"
+                className="animate-kapuru-bounce h-9 w-9 shrink-0 sm:h-11 sm:w-11"
+              />
+              <div className="min-w-0 leading-tight">
+                <h1 className="font-display text-base font-bold text-ink sm:text-lg">
+                  Kapruu <span className="text-sm">🌴</span>
+                </h1>
+                <p className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-extrabold text-green-deep">
+                  <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-green" />
+                  online<span className="hidden sm:inline"> · your gift genie 🎁</span>
                 </p>
               </div>
-              <div className="ml-auto flex items-center gap-2">
+              <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
                 {cart.length > 0 && (
                   <button
                     key={`${cartCount(cart)}-${cartTotal(cart)}`}
                     onClick={() => setCartOpen((o) => !o)}
                     title="Your cart"
-                    className="animate-kapuru-pop sticker-sm sticker-lift rounded-full bg-sky px-3.5 py-1.5 text-xs font-extrabold text-ink"
+                    className="animate-kapuru-pop sticker-sm sticker-lift whitespace-nowrap rounded-full bg-sky px-2.5 py-1.5 text-xs font-extrabold text-ink sm:px-3.5"
                   >
-                    🛒 {cartCount(cart)} · {formatPrice(cartTotal(cart), cart[0]?.currency ?? 'LKR')}
+                    🛒 {cartCount(cart)}
+                    <span className="hidden min-[430px]:inline">
+                      {' '}
+                      · {formatPrice(cartTotal(cart), cart[0]?.currency ?? 'LKR')}
+                    </span>
                   </button>
                 )}
                 {confirmNew ? (
-                  <div className="animate-kapuru-pop flex items-center gap-2">
-                    <span className="text-xs font-extrabold text-ink/60">
+                  <div className="animate-kapuru-pop flex items-center gap-1.5 sm:gap-2">
+                    <span className="hidden text-xs font-extrabold text-ink/60 md:inline">
                       clear chat{cart.length > 0 ? ' + cart' : ''}?
                     </span>
                     <button
                       onClick={newChat}
-                      className="sticker-sm sticker-lift rounded-full bg-coral-deep px-3.5 py-1.5 text-xs font-extrabold text-white"
+                      className="sticker-sm sticker-lift whitespace-nowrap rounded-full bg-coral-deep px-2.5 py-1.5 text-xs font-extrabold text-white sm:px-3.5"
                     >
-                      yes, clear
+                      <span className="sm:hidden">clear ✓</span>
+                      <span className="hidden sm:inline">yes, clear</span>
                     </button>
                     <button
                       onClick={cancelNewChat}
-                      className="sticker-sm sticker-lift rounded-full bg-white px-3.5 py-1.5 text-xs font-extrabold text-ink"
+                      className="sticker-sm sticker-lift whitespace-nowrap rounded-full bg-white px-2.5 py-1.5 text-xs font-extrabold text-ink sm:px-3.5"
                     >
-                      keep it
+                      <span className="sm:hidden">✕</span>
+                      <span className="hidden sm:inline">keep it</span>
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={askNewChat}
                     title="Start a new chat"
-                    className="sticker-sm sticker-lift rounded-full bg-sunny px-3.5 py-1.5 text-xs font-extrabold text-ink"
+                    className="sticker-sm sticker-lift whitespace-nowrap rounded-full bg-sunny px-2.5 py-1.5 text-xs font-extrabold text-ink sm:px-3.5"
                   >
-                    new chat
+                    new<span className="hidden min-[380px]:inline"> chat</span>
                   </button>
                 )}
               </div>
@@ -274,7 +299,7 @@ export default function Home() {
               {messages.map((m, mi) =>
                 m.role === 'user' ? (
                   <div key={m.id} className="animate-kapuru-pop flex justify-end">
-                    <div className="max-w-[78%] whitespace-pre-wrap rounded-[22px] rounded-br-md bg-coral-deep px-5 py-3 text-sm font-bold text-white sticker">
+                    <div className="max-w-[78%] whitespace-pre-wrap rounded-[22px] rounded-br-md bg-green-deep px-5 py-3 text-sm font-bold text-white sticker">
                       {m.parts.map((p, i) => (p.type === 'text' ? <span key={i}>{p.text}</span> : null))}
                     </div>
                   </div>
