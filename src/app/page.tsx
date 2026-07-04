@@ -297,33 +297,33 @@ export default function Home() {
 
       {/* Messages */}
       <main ref={mainRef} onScroll={handleScroll} className="relative z-10 flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-4xl px-4 py-8">
+        <div className="mx-auto max-w-4xl px-2 py-4 sm:px-4 sm:py-8">
           {messages.length === 0 ? (
             <Welcome onPick={send} />
           ) : (
-            <div role="log" aria-live="polite" className="glass space-y-7 rounded-[28px] p-6 sm:p-8">
+            <div role="log" aria-live="polite" className="glass space-y-5 rounded-[20px] p-3 sm:space-y-7 sm:rounded-[28px] sm:p-8">
               {messages.map((m, mi) =>
                 m.role === 'user' ? (
                   <div key={m.id} className="animate-kapuru-pop flex justify-end">
-                    <div className="max-w-[78%] whitespace-pre-wrap rounded-[22px] rounded-br-md bg-green-deep px-5 py-3 text-sm font-bold text-white sticker">
+                    <div className="max-w-[88%] whitespace-pre-wrap rounded-[22px] rounded-br-md bg-green-deep px-4 py-2.5 text-sm font-bold text-white sticker sm:max-w-[78%] sm:px-5 sm:py-3">
                       {m.parts.map((p, i) => (p.type === 'text' ? <span key={i}>{p.text}</span> : null))}
                     </div>
                   </div>
                 ) : (
-                  <div key={m.id} className="animate-kapuru-pop flex gap-2.5">
+                  <div key={m.id} className="animate-kapuru-pop flex gap-1.5 sm:gap-2.5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/chatbot-animation.svg"
                       alt="Kapruu"
-                      className="mt-0.5 h-10 w-10 shrink-0"
+                      className="mt-0.5 h-8 w-8 shrink-0 sm:h-10 sm:w-10"
                     />
-                    <div className="min-w-0 max-w-[85%] flex-1 space-y-1.5">
+                    <div className="min-w-0 max-w-[88%] flex-1 space-y-1.5 sm:max-w-[85%]">
                       {m.parts.map((p, i) => {
                         if (p.type === 'text') {
                           return p.text ? (
                             <div
                               key={i}
-                              className="prose prose-sm w-fit max-w-full rounded-[22px] rounded-tl-md bg-white px-5 py-3 font-semibold text-ink sticker prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0 prose-headings:my-2 prose-a:text-green-deep prose-strong:text-ink"
+                              className="prose prose-sm w-fit max-w-full rounded-[22px] rounded-tl-md bg-white px-4 py-2.5 font-semibold text-ink sticker prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0 prose-headings:my-2 prose-a:text-green-deep prose-strong:text-ink sm:px-5 sm:py-3"
                             >
                               <Markdown remarkPlugins={[remarkGfm]}>{p.text}</Markdown>
                             </div>
@@ -394,7 +394,7 @@ export default function Home() {
       </main>
 
       {/* Composer — chunky sticker bar */}
-      <footer className="relative z-10 px-4 pb-4 pt-2">
+      <footer className="relative z-10 px-2 pb-3 pt-2 sm:px-4 sm:pb-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -427,7 +427,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => stop()}
-              className="sticker-sm sticker-lift rounded-full bg-coral-deep px-5 py-2.5 text-sm font-extrabold text-white"
+              className="sticker-sm sticker-lift rounded-full bg-coral-deep px-4 py-2.5 text-sm font-extrabold text-white sm:px-5"
             >
               Stop ◼
             </button>
@@ -435,7 +435,7 @@ export default function Home() {
             <button
               type="submit"
               disabled={!input.trim()}
-              className="sticker-sm sticker-lift rounded-full bg-green-deep px-5 py-2.5 text-sm font-extrabold text-white disabled:opacity-40"
+              className="sticker-sm sticker-lift rounded-full bg-green-deep px-4 py-2.5 text-sm font-extrabold text-white disabled:opacity-40 sm:px-5"
             >
               Send →
             </button>
@@ -448,21 +448,23 @@ export default function Home() {
 
 function Welcome({ onPick }: { onPick: (t: string) => void }) {
   return (
-    <div className="flex flex-col items-center py-8 text-center">
+    <div className="flex flex-col items-center px-2 py-4 text-center sm:py-8">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/hello.svg"
         alt="Kapruu says hello"
-        className="animate-kapuru-float h-56 w-auto drop-shadow-xl"
+        className="animate-kapuru-float h-40 w-auto drop-shadow-xl sm:h-56"
       />
-      <div className="animate-kapuru-wobble mt-6 inline-block rounded-[22px] bg-sunny px-5 py-2 sticker">
-        <h2 className="font-display text-2xl font-bold text-ink">Ayubowan! I&apos;m Kapruu 👋</h2>
+      <div className="animate-kapuru-wobble mt-5 inline-block rounded-[22px] bg-sunny px-4 py-2 sticker sm:mt-6 sm:px-5">
+        <h2 className="font-display text-xl font-bold text-ink sm:text-2xl">
+          Ayubowan! I&apos;m Kapruu 👋
+        </h2>
       </div>
-      <p className="mt-5 max-w-md text-sm font-semibold text-ink/70">
+      <p className="mt-4 max-w-md text-sm font-semibold text-ink/70 sm:mt-5">
         Tell me who you&apos;re shopping for and I&apos;ll dig up the perfect gift from Kapruka —
         flowers, cakes, chocolates &amp; more, delivered all over Sri Lanka. 🇱🇰
       </p>
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
+      <div className="mt-6 flex flex-wrap justify-center gap-2.5 sm:mt-8 sm:gap-3">
         {SUGGESTIONS.map((s, i) => (
           <button
             key={s.label}
@@ -483,7 +485,7 @@ function Welcome({ onPick }: { onPick: (t: string) => void }) {
 function QuickReplies({ chips, onPick }: { chips: Chip[]; onPick: (t: string) => void }) {
   const colors = ['bg-sunny', 'bg-sky', 'bg-grape'];
   return (
-    <div className="flex flex-wrap gap-2 pl-[50px]">
+    <div className="flex flex-wrap gap-2 pl-0 sm:pl-[50px]">
       {chips.map((c, i) => (
         <button
           key={c.label}
@@ -532,10 +534,10 @@ function CartPanel({ items, onCheckout }: { items: CartItem[]; onCheckout: () =>
 
 function ErrorBubble({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="animate-kapuru-pop flex gap-2.5">
+    <div className="animate-kapuru-pop flex gap-1.5 sm:gap-2.5">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/chatbot-animation.svg" alt="Kapruu" className="mt-0.5 h-10 w-10 shrink-0" />
-      <div className="flex flex-wrap items-center gap-3 rounded-[22px] rounded-tl-md bg-white px-5 py-3 sticker">
+      <img src="/chatbot-animation.svg" alt="Kapruu" className="mt-0.5 h-8 w-8 shrink-0 sm:h-10 sm:w-10" />
+      <div className="flex flex-wrap items-center gap-3 rounded-[22px] rounded-tl-md bg-white px-4 py-2.5 sticker sm:px-5 sm:py-3">
         <p className="text-sm font-bold text-ink">
           Aiyo, I tripped over something! 🙈 Give me another go?
         </p>
@@ -566,9 +568,9 @@ function Thinking() {
   }, []);
 
   return (
-    <div className="flex gap-2.5">
+    <div className="flex gap-1.5 sm:gap-2.5">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/chatbot-animation.svg" alt="Kapruu" className="mt-0.5 h-10 w-10 shrink-0" />
+      <img src="/chatbot-animation.svg" alt="Kapruu" className="mt-0.5 h-8 w-8 shrink-0 sm:h-10 sm:w-10" />
       <div className="flex items-center gap-2 rounded-[20px] rounded-tl-md bg-white px-4 py-3 sticker">
         <span className="flex items-center gap-1.5">
           <Dot delay="0ms" />

@@ -1,6 +1,6 @@
 'use client';
 
-// Playful gradient mascot for Kapuru — a bouncy squircle with an emoji face
+// Playful gradient mascot for Kapruu — a bouncy squircle with an emoji face
 // and optional twinkling sparkles. Pure CSS, no libraries.
 
 export function Mascot({

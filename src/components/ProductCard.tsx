@@ -28,7 +28,7 @@ export function ProductCard({
           tellMore();
         }
       }}
-      className="animate-kapuru-pop sticker sticker-lift group flex w-60 shrink-0 snap-start cursor-pointer flex-col overflow-hidden rounded-[20px] bg-white text-left"
+      className="animate-kapuru-pop sticker sticker-lift group flex w-48 shrink-0 snap-start cursor-pointer flex-col overflow-hidden rounded-[20px] bg-white text-left sm:w-60"
     >
       <div className="relative aspect-square overflow-hidden border-b-[2.5px] border-ink bg-paper">
         {imgOk && product.imageUrl ? (

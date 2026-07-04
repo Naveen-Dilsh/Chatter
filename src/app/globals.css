@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ── Kapuru sticker / doodle design system ───────────────────────────── */
+/* ── Kapruu sticker / doodle design system ───────────────────────────── */
 :root {
   --ink: #2c2218;          /* warm near-black — every border + outline */
   --paper: #fff7ea;        /* cream paper background */

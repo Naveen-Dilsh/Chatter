@@ -2,7 +2,7 @@
 
 import { useId } from 'react';
 
-// Full-body animated robot character "Kapuru" — pure SVG, no libraries.
+// Full-body animated robot character "Kapruu" — pure SVG, no libraries.
 // Floats, blinks, pulses its chest light, and waves its right arm hello.
 
 export function RobotMascot({ size = 140, className = '' }: { size?: number; className?: string }) {

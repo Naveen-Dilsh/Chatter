@@ -142,7 +142,7 @@ function SearchSkeleton() {
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="w-60 shrink-0 overflow-hidden rounded-[20px] bg-white sticker"
+          className="w-48 shrink-0 overflow-hidden rounded-[20px] bg-white sticker sm:w-60"
         >
           <div className="aspect-square animate-pulse border-b-[2.5px] border-ink bg-paper" />
           <div className="space-y-2 p-3">
